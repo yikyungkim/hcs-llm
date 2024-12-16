@@ -1,13 +1,17 @@
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
 
 import io
+import os
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from bs4 import BeautifulSoup
 import requests
 
+os.environ['OPENAI_API_KEY'] = "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"
 
 
 # # Helper function to extract content from a PDF
@@ -39,7 +43,8 @@ def extract_url_content(url):
 # Streamlit app configuration
 st.title("HCS LLM Services")
 st.sidebar.title("Choose LLM Service")
-option = st.sidebar.selectbox("Select an option:", ["Summarization", "Code Assistant"])
+services = ["Summarization", "Code Assistant", "General Chatbot"]
+option = st.sidebar.selectbox("Select an option:", services)
 
 
 # Initialize OpenAI model with LangChain
@@ -139,3 +144,26 @@ elif option=="Code Assistant":
             st.warning("Please enter a question or issue.")
 
     
+elif option=="General Chatbot":
+    memory = ConversationBufferMemory()
+    conversation = ConversationChain(llm=llm, memory=memory)
+    st.write("## What can I help with?")
+    
+    if "messages" not in st.session_state:
+        st.session_state["messages"] = []
+
+    for message in st.session_state["messages"]:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if user_input := st.chat_input("Enter message here"):
+        with st.chat_message("user"):
+            st.markdown(user_input)
+
+        st.session_state["messages"].append({"role": "user", "content": user_input})
+        response = conversation.run(input=user_input)
+        
+        with st.chat_message("assistant"):
+            st.markdown(response)
+
+        st.session_state["messages"].append({"role": "assistant", "content": response})
