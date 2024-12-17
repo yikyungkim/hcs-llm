@@ -10,6 +10,13 @@ from bs4 import BeautifulSoup
 import requests
 from PyPDF2 import PdfReader
 import io
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 
 # Helper functions
 def extract_pdf_content(uploaded_file):
