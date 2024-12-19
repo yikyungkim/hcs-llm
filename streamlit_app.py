@@ -142,7 +142,11 @@ elif option == "Code Assistant":
 elif option == "General Chatbot":
     st.subheader("🧑‍💬 General Chatbot")
     st.info("Chat with the assistant for any questions or help.")
-    memory = ConversationBufferMemory()
+    
+    if "memory" not in st.session_state:
+        st.session_state["memory"] = ConversationBufferMemory()
+
+    memory = st.session_state["memory"]
     conversation = ConversationChain(llm=llm, memory=memory)
 
     if "messages" not in st.session_state:
@@ -156,7 +160,11 @@ elif option == "General Chatbot":
         with st.chat_message("user"):
             st.markdown(user_input)
         st.session_state["messages"].append({"role": "user", "content": user_input})
+
         response = conversation.run(input=user_input)
+        
         with st.chat_message("assistant"):
             st.markdown(response)
         st.session_state["messages"].append({"role": "assistant", "content": response})
+
+
