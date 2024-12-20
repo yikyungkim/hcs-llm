@@ -66,8 +66,34 @@ st.sidebar.header("🔄 Navigation")
 services = ["Summarization", "Code Assistant", "General Chatbot"]
 option = st.sidebar.radio("Select a Service", services)
 
-# Initialize OpenAI model
-llm = ChatOpenAI(model="gpt-4o", temperature=0.7)
+# Model configuration settings
+st.sidebar.header("⚙️ Model Configuration")
+model_type = st.sidebar.selectbox("Model Type:", ["gpt-4", "gpt-3.5-turbo", "gpt-4o"], index=0)
+response_type = st.sidebar.selectbox("Select Response Type:", ["Creative", "Balanced", "Accurate"], index=1)
+
+# Pre-configured settings based on response type
+if response_type == "Creative":
+    temperature, top_p, p_penalty, f_penalty, max_tokens = 0.8, 0.9, 0.1, 0.1, 500
+elif response_type == "Balanced":
+    temperature, top_p, p_penalty, f_penalty, max_tokens = 0.5, 0.8, 0.2, 0.3, 500
+elif response_type == "Accurate":
+    temperature, top_p, p_penalty, f_penalty, max_tokens = 0.2, 0.7, 0.5, 0.5, 500
+
+# Custom Configuration
+show_custom_settings = st.sidebar.checkbox("Show Custom Model Settings")
+
+if show_custom_settings:
+    st.sidebar.subheader("Custom Model Settings")
+
+# st.sidebar.subheader("Custom Model Settings")
+    temperature = st.sidebar.slider("Temperature (for randomness):", 0.0, 1.0, temperature, 0.1)
+    top_p = st.sidebar.slider("Top-p (nucleus sampling):", 0.1, 1.0, top_p, 0.1)
+    max_tokens = st.sidebar.slider("Max Tokens (output length):", 50, 2000, 500, 50)
+    p_penalty = st.sidebar.slider("Presence Penalty:", 0.1, 1.0, p_penalty, 0.1)
+    f_penalty = st.sidebar.slider("Frequency Penalty:", 0.1, 1.0, f_penalty, 0.1)
+
+# Update the model based on user selection
+llm = ChatOpenAI(model=model_type, temperature=temperature, max_tokens=max_tokens, top_p=top_p, presence_penalty=p_penalty, frequency_penalty=f_penalty)
 
 # Prompt Templates
 prompt_summary = ChatPromptTemplate.from_messages([
@@ -128,6 +154,7 @@ if option == "Summarization":
 elif option == "Code Assistant":
     st.subheader("🛠️ Code Assistant")
     st.info("Describe your coding problem, and I will assist with solutions, debugging, or explanations.")
+
     user_question = st.text_area("Enter your coding question:", height=150)
     if st.button("Get Solution", key="code_solution"):
         if user_question.strip():
@@ -142,7 +169,7 @@ elif option == "Code Assistant":
 elif option == "General Chatbot":
     st.subheader("🧑‍💬 General Chatbot")
     st.info("Chat with the assistant for any questions or help.")
-    
+
     if "memory" not in st.session_state:
         st.session_state["memory"] = ConversationBufferMemory()
 
