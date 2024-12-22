@@ -83,7 +83,6 @@ if option == "Summarization":
 elif option == "Code Assistant":
     code_service(llm)
 elif option == "Question and Answering":
-    from utils import save_vector_store, load_vector_store, extract_pdf_content, extract_url_content
     qa_service(llm, embedding_model)
 elif option == "General Chatbot":
     chatbot_service(llm)
