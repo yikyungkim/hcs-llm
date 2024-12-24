@@ -11,8 +11,8 @@ from code_service import code_service
 from qa_service import qa_service
 from chatbot_service import chatbot_service
 
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# load_dotenv()
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # App Configuration and Styling
 st.set_page_config(page_title="HCS LLM Services", page_icon="🤖", layout="wide")

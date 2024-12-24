@@ -1,9 +1,13 @@
-from langchain.vectorstores import FAISS
-from langchain.embeddings.openai import OpenAIEmbeddings
-
+import io
+import os
+import requests
 from PyPDF2 import PdfReader
 from bs4 import BeautifulSoup
-import requests
+
+from langchain.schema import Document
+from langchain.vectorstores import FAISS
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 def extract_pdf_content(uploaded_file):
@@ -16,11 +20,10 @@ def extract_url_content(url):
     soup = BeautifulSoup(response.text, "html.parser")
     return soup.get_text()
 
-# Save and Load VectorStore
-def save_vector_store(vector_store, path="vector_store"):
+def save_vector_store(vector_store, path="./vector_db"):
     vector_store.save_local(path)
 
-def load_vector_store(path="vector_store"):
+def load_vector_store(path="./vector_db"):
     if os.path.exists(path):
         return FAISS.load_local(path, OpenAIEmbeddings(), allow_dangerous_deserialization=True)
     return None
