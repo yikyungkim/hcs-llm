@@ -8,7 +8,7 @@ def chatbot_service(llm):
     st.info("Chat with the assistant for any questions or help.")
 
     if "memory" not in st.session_state:
-        st.session_state["memory"] = ConversationBufferMemory()
+        st.session_state["memory"] = ConversationBufferMemory(return_messages=True)
 
     memory = st.session_state["memory"]
     conversation = ConversationChain(llm=llm, memory=memory)
@@ -25,8 +25,7 @@ def chatbot_service(llm):
             st.markdown(user_input)
         st.session_state["messages"].append({"role": "user", "content": user_input})
 
-        response = conversation.run(input=user_input)
-        
         with st.chat_message("assistant"):
+            response = conversation.run(input=user_input)
             st.markdown(response)
         st.session_state["messages"].append({"role": "assistant", "content": response})
