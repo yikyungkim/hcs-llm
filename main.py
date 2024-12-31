@@ -86,3 +86,7 @@ elif option == "Question and Answering":
     qa_service(llm, embedding_model)
 elif option == "General Chatbot":
     chatbot_service(llm)
+
+
+# agent tool calling, multi-agent
+# chat: streaming, caching
