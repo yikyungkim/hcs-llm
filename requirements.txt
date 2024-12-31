@@ -6,3 +6,5 @@ bs4
 PyPDF2
 requests
 python-dotenv
+tiktoken
+faiss-cpu
