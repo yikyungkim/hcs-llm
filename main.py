@@ -88,5 +88,3 @@ elif option == "General Chatbot":
     chatbot_service(llm)
 
 
-# agent tool calling, multi-agent
-# chat: streaming, caching

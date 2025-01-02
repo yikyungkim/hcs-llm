@@ -2,6 +2,8 @@ import streamlit as st
 from langchain.chains import RetrievalQA
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
 from langchain.vectorstores import FAISS
 
 from utils import *
