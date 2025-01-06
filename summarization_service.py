@@ -16,6 +16,77 @@ def summarization_service(llm):
     # 입력 데이터 선택
     input_method = st.radio("Input Method", ["Text", "PDF Upload", "URL"])
 
+    content=""
+    if input_method == "Text":
+        content = st.text_area("Enter your text:", 
+                                 height=200,
+                                 help="Enter the text that you want to summarize.")
+
+    elif input_method == "PDF Upload":
+        uploaded_file = st.file_uploader("Upload a PDF file:", type=["pdf"])
+        if uploaded_file:
+            content = extract_pdf_content(uploaded_file)
+
+    elif input_method == "URL":
+        url = st.text_input("Enter a URL:")
+        if url.strip():
+            content = extract_url_content(url)
+
+    prompt_summary = ChatPromptTemplate.from_template(
+        """
+        You are a professional summarization assistant. Your task is to summarize the provided text in Korean while maintaining accuracy and clarity. 
+
+        Instructions: 
+        1. Provide a brief summary of the main point in 1-2 sentences.  
+        2. List key details and highlights using bullet points.  
+        3. Offer insights or takeaways based on the content.  
+
+        Output Format (in Korean): 
+        1. **핵심 요약:**  
+        - [Write the main point here in 1-2 sentences.]  
+
+        2. **주요 내용:**  
+        - [Bullet point 1]  
+        - [Bullet point 2]  
+        - [Bullet point 3]  
+
+        3. **인사이트 및 시사점 (Insights and Takeaways):**  
+        - [Insight 1]  
+        - [Insight 2]  
+        - [Insight 3]  
+
+        Input Text: {text}
+        """
+    )
+
+    # 텍스트 분할 및 요약
+    if st.button("Summarize", key="summarize") and content:
+        with st.spinner("문서를 요약하는 중입니다..."):
+            splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
+            chunks = splitter.split_text(content)
+
+            # Generate summaries for each chunk
+            summaries = []
+            for chunk in chunks:
+                prompt = prompt_summary.format(text=chunk)
+                response = llm.predict(prompt)
+                summaries.append(response)
+            st.success("### AI Summarization Assistant's Response")
+            for idx, summary in enumerate(summaries):
+                st.write(f"### Part {idx+1}")
+                st.write(summary)
+    elif not content:
+        st.warning("Please enter text to summarize.")
+
+
+# Advanced summarization service
+def summarization_service_advanced(llm):
+    st.subheader("🕵️ Summarization Service")
+    st.info("Summarize text, PDFs, or content from a URL. Choose your input method below.")
+
+    # 입력 데이터 선택
+    input_method = st.radio("Input Method", ["Text", "PDF Upload", "URL"])
+
     if input_method == "Text":
         content = st.text_area("Enter your text:", 
                                  height=200,

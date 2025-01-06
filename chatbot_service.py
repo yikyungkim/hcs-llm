@@ -8,7 +8,7 @@ def chatbot_service(llm):
     st.info("Chat with the assistant for any questions or help.")
 
     if "memory" not in st.session_state:
-        st.session_state["memory"] = ConversationBufferMemory(return_messages=True)
+        st.session_state["memory"] = ConversationBufferMemory(return_messages=True, memory_key="history", input_key="input")
 
     memory = st.session_state["memory"]
     conversation = ConversationChain(llm=llm, memory=memory)
