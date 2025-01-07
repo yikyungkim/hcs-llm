@@ -75,8 +75,6 @@ def summarization_service(llm):
             for idx, summary in enumerate(summaries):
                 st.write(f"### Part {idx+1}")
                 st.write(summary)
-    elif not content:
-        st.warning("Please enter text to summarize.")
 
 
 # Advanced summarization service
