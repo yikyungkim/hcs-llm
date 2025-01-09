@@ -15,7 +15,7 @@ from chatbot_service import chatbot_service
 # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # App Configuration and Styling
-st.set_page_config(page_title="HCS LLM Services", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="LLM Services", page_icon="🤖", layout="wide")
 st.markdown("""
     <style>
         .title {
@@ -41,7 +41,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Title Section
-st.markdown("<p class='title'>HCS LLM Services 🤖</p>", unsafe_allow_html=True)
+st.markdown("<p class='title'>LLM Services 🤖</p>", unsafe_allow_html=True)
 st.markdown("<p class='subtitle'>Your AI-Powered Assistant for Summarization, Code Help, Q&A, and General Chat</p>", unsafe_allow_html=True)
 
 # Sidebar Navigation
